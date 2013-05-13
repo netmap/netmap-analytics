@@ -4,6 +4,7 @@ d = 0
 dcount = 0
 pagecount = 0
 fdata = {}
+tempdata = {}
 while(d != -1):
   url = "http://netmap-data.pwnb.us/readings/above/" + str(d)
   response = urllib.urlopen(url);
@@ -19,30 +20,26 @@ while(d != -1):
     stopval = 0
     while(stopval == 0 and dcount < len(data)):
       if ('location' in data[dcount]['data'] and 'ndt' in data[dcount]['data'] and 'bw' in data[dcount]['data']['ndt'] and 'avgrtt' in data[dcount]['data']['ndt']):
+        floc = data[dcount]['data']['location']
+        fnew_key = str(round(floc['longitude'],3)) + "," + str(round(floc['latitude'],3))
+        tempdata[fnew_key] = []
+        tempdata[fnew_key].append(data[dcount]['data'])
         dc = dcount
-        stopval = 1
       dcount = dcount + 1 
-    #add first key on first run
-    if (pagecount == 0):
-      floc = data[dc]['data']['location']
-      fnew_key = str(round(floc['longitude'],2)) + "," + str(round(floc['latitude'],2))
-      fdata[fnew_key] = []
-      fdata[fnew_key].append(data[dc]['data'])
-    pagecount = pagecount + 1
-    for x in xrange(dc+1, len(data)):
-      loc = data[x]['data']['location']
-      for k in fdata:
+    for x in xrange(0, len(data)):
+      for k in tempdata:
 	l = k.split(',')
         #lo is longitude for that reading, la is latitude for that reading (both in decimal)
 	lo = Decimal(l[0])
 	la = Decimal(l[1])
-        #if lo and la are within 0.01 of previous entry, then combine with it. else make a new one
+        #if lo and la are within 0.001 of previous entry, then combine with it. else make a new one
         if 'ndt' in data[x]['data'] and 'bw' in data[x]['data']['ndt'] and 'avgrtt' in data[x]['data']['ndt']: 
-          #if (math.fabs((Decimal(round(loc['longitude'], 2)) - float(lo)) < 0.1) and (math.fabs(Decimal(round(loc['latitude'], 2)) - float(la)) < 0.1)):
-          if (math.fabs(round(loc['longitude'],2) - float(lo)) < 0.01 and math.fabs(round(loc['latitude'],2) - float(la)) < 0.01):  
+          loc = data[x]['data']['location']
+          if (math.fabs(round(loc['longitude'],3) - float(lo)) < 0.001 and math.fabs(round(loc['latitude'],3) - float(la)) < 0.001):  
+            fdata[k] = []
             fdata[k].append(data[x]['data'])
 	  else:
-	    new_key = str(round(loc['longitude'],2)) + "," + str(round(loc['latitude'],2))
+	    new_key = str(round(loc['longitude'],3)) + "," + str(round(loc['latitude'],3))
 	    fdata[new_key] = []
 	    fdata[new_key].append(data[x]['data']) 
             #fdata[new_key] = [data[x]['data']] 
