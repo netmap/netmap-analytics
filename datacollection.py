@@ -72,6 +72,7 @@ for lkey in fdata:
   totdat['rtt'] = rtttotal/len(fdata[lkey])
   senddata[lkey] = {}
   senddata[lkey] = totdat
-
-print senddata
+jsenddata = json.dumps(senddata)
+with open("onmapdata.json", "w") as f:
+    f.write(jsenddata)
 #senddata is the final dictionary with keys as long,lat and values as dictionaries (one per location) with keys as latency, rtt, etc. and values as the final values.
