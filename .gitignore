@@ -1,0 +1,19 @@
+# Vim.
+*.sw*
+
+# Ignore bundler config
+/.bundle
+
+# Ignore the build directory
+/build
+
+# Ignore Sass' cache
+/.sass-cache
+
+# Ignore rbenv directives
+.rbenv-version
+.rbenv-gemsets
+
+# Ignore analytics data.
+raw/
+source/json
