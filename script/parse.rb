@@ -17,6 +17,8 @@ File.open 'raw/readings.jsonn', 'rb' do |f|
 
     lat = location['latitude']
     long = location['longitude']
+    next unless lat and long
+
     key = [lat.round(3), long.round(3)]
     grid[key] ||= []
     grid[key] << reading
@@ -43,6 +45,6 @@ summary = grid.map do |key, readings|
   }
 end
 
-File.open 'json/netmap.jsonp', 'wb' do |f|
+File.open 'source/json/netmap.jsonp', 'wb' do |f|
   f.write "onMapData(#{JSON.dump(summary)});\n"
 end

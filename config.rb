@@ -24,13 +24,6 @@ activate :sprockets
 require 'compass'
 require 'zurb-foundation'
 
-# Undo a hack that is unnecessary and breaks stuff.
-module Sass::Script::Functions
-  if method_defined?(:image_url)
-    remove_method :image_url
-  end
-end
-
 ###
 # Page options, layouts, aliases and proxies
 ###
